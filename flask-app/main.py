@@ -23,7 +23,7 @@ def place_api_call(location,types,radius='2000'):
 
 	final_data = []
 	
-	url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&types=%s&key=AIzaSyBF5ZAK0oC3eyuxl0ATY-t_hVQfts1P4WI" % (location,radius,_types)
+	url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&types=%s&key=<API_KEY>" % (location,radius,_types)
 
 	payload={}
 	headers = {}
