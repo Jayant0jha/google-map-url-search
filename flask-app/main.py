@@ -54,7 +54,7 @@ def place_api_call(location,types,radius='2000'):
 			time.sleep(2)
 		next_page_token = '&pagetoken=%s' % str(next_page_token)
 		print(location,radius,types,next_page_token)
-		url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&types=%s&key=AIzaSyBF5ZAK0oC3eyuxl0ATY-t_hVQfts1P4WI%s" % (location,radius,_types,next_page_token)
+		url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&types=%s&key=<API+KEY>%s" % (location,radius,_types,next_page_token)
 
 	labels = ['Place Name','Place ID', 'Latitude', 'Longitude', 'rating','Types', 'Vicinity']
 
