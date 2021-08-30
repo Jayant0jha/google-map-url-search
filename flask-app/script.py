@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, Response
 import pandas as pd, numpy as np
 import requests
 import json
@@ -19,10 +19,11 @@ all_types = ['accounting','airport','amusement_park','aquarium','art_gallery','a
 
 
 def place_api_call(location,types,radius='2000'):
+	_types = types
 
 	final_data = []
 	
-	url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&types=%s&key=AIzaSyBF5ZAK0oC3eyuxl0ATY-t_hVQfts1P4WI" % (location,radius,types)
+	url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&types=%s&key=AIzaSyBF5ZAK0oC3eyuxl0ATY-t_hVQfts1P4WI" % (location,radius,_types)
 
 	payload={}
 	headers = {}
@@ -50,13 +51,21 @@ def place_api_call(location,types,radius='2000'):
 			break
 		else:
 			next_page_token = response['next_page_token']
+			time.sleep(2)
 		next_page_token = '&pagetoken=%s' % str(next_page_token)
-		url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&types=%s&key=AIzaSyBF5ZAK0oC3eyuxl0ATY-t_hVQfts1P4WI%s" % (location,radius,types,next_page_token)
+		print(location,radius,types,next_page_token)
+		url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&types=%s&key=AIzaSyBF5ZAK0oC3eyuxl0ATY-t_hVQfts1P4WI%s" % (location,radius,_types,next_page_token)
 
 	labels = ['Place Name','Place ID', 'Latitude', 'Longitude', 'rating','Types', 'Vicinity']
 
 	export_dataframe_1_medium = pd.DataFrame.from_records(final_data, columns=labels)
-	export_dataframe_1_medium.to_csv('export_dataframe_1_medium.csv')
+	export_dataframe_1_medium.to_csv('near_by_me.csv')
+	with open("near_by_me.csv") as fp:
+		csv = fp.read()
+	return csv
+	
+
+
 app = Flask(__name__)
 
 
@@ -74,8 +83,14 @@ def runScript():
 			if type in url and type not in types:
 				types.append(type)
 		query_type = ",".join(types)
-		place_api_call(location,query_type)
-		return redirect(url_for("download", data=url))
+		csv = place_api_call(location,query_type)
+		# return redirect(url_for("download", data=url))
+		
+		return Response(
+        csv,
+        mimetype="text/csv",
+        headers={"Content-disposition":
+                 "attachment; filename=nearby_places.csv"})
 	else:
 		return render_template("form.html")
 
