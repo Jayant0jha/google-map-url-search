@@ -59,10 +59,10 @@ def place_api_call(location,types,radius='2000'):
 	labels = ['Place Name','Place ID', 'Latitude', 'Longitude', 'rating','Types', 'Vicinity']
 
 	export_dataframe_1_medium = pd.DataFrame.from_records(final_data, columns=labels)
-	export_dataframe_1_medium.to_csv('near_by_me.csv')
-	with open("near_by_me.csv") as fp:
-		csv = fp.read()
-	return csv
+	return export_dataframe_1_medium.to_csv()
+	# with open("near_by_me.csv") as fp:
+	# 	csv = fp.read()
+	# return csv
 	
 
 
