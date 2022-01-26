@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Login Page{% endblock %}
+{% block title %}Search Places{% endblock %}
 
 {% block content %}
 <!-- <form action="#" method="post">
@@ -8,13 +8,16 @@
 	<p><input type="submit" value="Submit"/></p>
 </form> -->
 <div class="container">
-    <form action="#" method="post">
-        <div class="form-group">
-          <label for="url">Google Maps URL</label>
-          <input type="text" class="form-control" id="url" aria-describedby="err" placeholder="Enter google maps url" name="url">
-          <small id="err" class="form-text text-muted">Enter your search URL from Google Maps here.</small>
+    <form action="/" method="post">
+        <div style="margin-top: 16px;" class="form-group">
+          <label for="searchText">Search for Places</label>
+          <input type="text" class="form-control" id="searchText" aria-describedby="err" placeholder="Restraunts in New York" name="searchText">
+          <small id="err" class="form-text text-muted">Enter your search query for places here, for example "pizza in New York" or "shoe stores near Ottawa" or "123 Main Street". </small>
         </div>
         <button type="submit" class="btn btn-primary">Download Results</button>
     </form>
+    {% if error %}
+      <div style="margin-top: 16px; color: red; font-weight: 500;">{{ error }}</div>
+    {% endif %}
 </div>
 {% endblock %}
