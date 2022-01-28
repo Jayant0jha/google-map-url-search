@@ -51,8 +51,10 @@ def place_api_call(query,radius='2000'):
 				rating = result.get('rating',0)
 				types = result['types'] if 'types' in result else ''
 				vicinity = result['vicinity'] if 'vicinity' in result else ''
+				place_url = result['url'] if 'url' in result else ''
+				website = result['website'] if 'website' in result else ''
 
-				place_detail_url = 'https://maps.googleapis.com/maps/api/place/details/json?fields=formatted_phone_number,international_phone_number&place_id=%s&key=%s' % (result['place_id'], api_key)
+				place_detail_url = 'https://maps.googleapis.com/maps/api/place/details/json?fields=formatted_phone_number,international_phone_number,website,url&place_id=%s&key=%s' % (result['place_id'], api_key)
 				print('place detail url\n', url)
 				place_detail_res = requests.request("POST", place_detail_url, headers=headers, data=payload)
 
@@ -64,8 +66,10 @@ def place_api_call(query,radius='2000'):
 					phone_number = place_detail_results['formatted_phone_number'] if 'formatted_phone_number' in place_detail_results else ''
 					intl_number = place_detail_results['international_phone_number'] if 'international_phone_number' in place_detail_results else ''
 					print('ph no.\n', phone_number)
+					place_url = place_detail_results['url'] if 'url' in place_detail_results else ''
+					website = place_detail_results['website'] if 'website' in place_detail_results else ''
 
-				data = [name, phone_number, intl_number, address, business_status, lat, lng, rating, types, vicinity]
+				data = [name, phone_number, intl_number, address, business_status, lat, lng, rating, place_url, website, types, vicinity]
 				final_data.append(data)
 			#time.sleep(5)
 			print('next page token present\n' if 'next_page_token' in response else 'not present next page token\n')
@@ -79,7 +83,7 @@ def place_api_call(query,radius='2000'):
 			url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s%s" % (query, api_key, next_page_token)
 		else: 
 			return None, response['error_message']
-	labels = ['Place Name', 'Local Phone No.', 'Internation Phone No.', 'Address', 'Status', 'Latitude', 'Longitude', 'rating','Types', 'Vicinity']
+	labels = ['Place Name', 'Local Phone No.', 'Internation Phone No.', 'Address', 'Status', 'Latitude', 'Longitude', 'rating', 'URL', 'Website', 'Types', 'Vicinity']
 
 	export_dataframe_1_medium = pd.DataFrame.from_records(final_data, columns=labels)
 	return export_dataframe_1_medium.to_csv(), None
